@@ -1,6 +1,6 @@
 import { loginSchema } from '@/server/schemas/authSchema';
 import { prisma } from '@/utils/prisma';
-import { verify } from 'argon2';
+import { hash, verify } from 'argon2';
 import { NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
@@ -16,7 +16,7 @@ export const nextAuthOptions: NextAuthOptions = {
         },
         password: { label: 'Password', type: 'password' },
       },
-      authorize: async (credentials, _request) => {
+      authorize: async (credentials) => {
         const creds = await loginSchema.parseAsync(credentials);
 
         const user = await prisma.user.findFirst({
@@ -27,7 +27,9 @@ export const nextAuthOptions: NextAuthOptions = {
           return null;
         }
 
-        const isValidPassword = await verify(user.password, creds.password);
+        const hashedPassword = await hash(creds.password);
+
+        const isValidPassword = await verify(user.password, hashedPassword);
 
         if (!isValidPassword) {
           return null;
@@ -36,7 +38,6 @@ export const nextAuthOptions: NextAuthOptions = {
         return {
           id: user.id,
           email: user.email,
-          username: user.username,
         };
       },
     }),
@@ -58,7 +59,7 @@ export const nextAuthOptions: NextAuthOptions = {
     maxAge: 7 * 24 * 30 * 60, // 7 days
   },
   pages: {
-    signIn: '/',
+    signIn: '/home',
     newUser: 'sign-up',
   },
 };

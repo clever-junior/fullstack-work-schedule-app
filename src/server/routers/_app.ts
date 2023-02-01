@@ -1,8 +1,8 @@
 import { router } from '../trpc';
-import { genericRouter } from './genericRouter';
+import { userRouter } from './user';
 
 export const appRouter = router({
-  generic: genericRouter,
+  user: userRouter,
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

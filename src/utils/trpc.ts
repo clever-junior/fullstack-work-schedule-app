@@ -33,6 +33,7 @@ export const trpc = createTRPCNext<AppRouter>({
           headers() {
             if (ctx?.req) {
               const { connection: _connection, ...headers } = ctx.req.headers;
+              console.log(_connection);
               return {
                 ...headers,
                 'x-ssr': '1',
@@ -46,6 +47,7 @@ export const trpc = createTRPCNext<AppRouter>({
   },
   ssr: true,
   responseMeta({ ctx, clientErrors }) {
+    console.log(ctx);
     if (clientErrors.length) {
       // propagate http first error from API calls
       return {
