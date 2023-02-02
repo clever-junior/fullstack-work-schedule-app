@@ -11,12 +11,32 @@ datasource db {
 }
 
 model User {
-  id       String  @id @unique @default(uuid())
-  name     String?
-  email    String  @unique
-  password String
-  role     String  @default("volunteer")
-  phone    String? @unique
+  id               String             @id @unique @default(uuid())
+  name             String?
+  email            String             @unique
+  password         String
+  role             String             @default("volunteer")
+  phone            String?            @unique
+  UserOnDepartment UserOnDepartment[]
 
   @@map("users")
+}
+
+model Department {
+  id               String             @id @unique @default(uuid())
+  name             String
+  UserOnDepartment UserOnDepartment[]
+
+  @@map("departments")
+}
+
+model UserOnDepartment {
+  userId       String     @map("user_id")
+  departmentId String     @map("department_id")
+  user         User       @relation(fields: [userId], references: [id])
+  department   Department @relation(fields: [departmentId], references: [id])
+  date         DateTime   @default(now())
+
+  @@id([userId, departmentId])
+  @@map("users_departments")
 }
