@@ -1,6 +1,9 @@
 {
   "name": "atitude-work-schedule",
   "version": "0.1.0",
+  "prisma": {
+    "seed": "ts-node --transpile-only --compiler-options {\"module\":\"CommonJS\"} prisma/seed-users.ts"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -59,6 +62,7 @@
     "prettier": "^2.8.3",
     "prisma": "^4.9.0",
     "tailwindcss": "^3.2.4",
+    "ts-node": "^10.9.1",
     "vitest": "^0.28.3"
   }
 }
